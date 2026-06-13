@@ -4,168 +4,554 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>F1 Race Predictor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --red: #E8002D;
+      --red-dark: #9B0020;
+      --black: #080808;
+      --panel: #111111;
+      --border: #222222;
+      --text: #F0F0F0;
+      --muted: #666666;
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #0f0f0f;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
+    /* ── HEADER ── */
     header {
-      background: #e10600;
-      padding: 20px 40px;
+      position: relative;
+      background: var(--black);
+      border-bottom: 3px solid var(--red);
+      padding: 0 48px;
+      height: 72px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+      overflow: hidden;
     }
 
-    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: 1px; }
-    header span { font-size: 0.9rem; opacity: 0.85; }
+    header::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 6px; height: 100%;
+      background: var(--red);
+    }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-
-    h2 { font-size: 1.1rem; color: #aaa; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
-
-    /* Circuit selector */
-    .circuits {
+    .logo {
       display: flex;
-      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .logo-f1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--red);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .logo-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .header-meta {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--red);
+      padding: 6px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 30s linear infinite;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: white;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+
+    /* ── SECTION LABELS ── */
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    /* ── CIRCUIT GRID ── */
+    .circuit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 56px;
+    }
+
+    .circuit-btn {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 12px 16px;
+      cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.15s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .circuit-btn::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 3px; height: 100%;
+      background: var(--red);
+      transform: scaleY(0);
+      transition: transform 0.15s;
+    }
+
+    .circuit-btn:hover {
+      border-color: #444;
+      color: var(--text);
+    }
+
+    .circuit-btn:hover::before { transform: scaleY(1); }
+
+    .circuit-btn.active {
+      background: #1a0005;
+      border-color: var(--red);
+      color: var(--text);
+    }
+
+    .circuit-btn.active::before { transform: scaleY(1); }
+
+    .circuit-country {
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-family: 'Barlow', sans-serif;
+    }
+
+    .circuit-btn.active .circuit-country { color: #e8002d99; }
+
+    /* ── DRIVER GRID ── */
+    .drivers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 10px;
       margin-bottom: 40px;
     }
 
-    .circuit-btn {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      color: #ccc;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-      text-transform: capitalize;
-    }
-
-    .circuit-btn:hover { border-color: #e10600; color: #fff; }
-    .circuit-btn.active { background: #e10600; border-color: #e10600; color: #fff; }
-
-    /* Driver selector */
-    .drivers {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 40px;
-    }
-
     .driver-card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 16px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .driver-card:hover { border-color: #e10600; }
-    .driver-card.selected { border-color: #e10600; background: #2a0a0a; }
+    .driver-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--red);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+      transform-origin: left;
+    }
 
-    .driver-name { font-weight: 600; font-size: 0.95rem; text-transform: capitalize; }
-    .driver-team { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: capitalize; }
-    .driver-pos { font-size: 0.75rem; color: #e10600; margin-top: 6px; }
+    .driver-card:hover { border-color: #444; }
+    .driver-card:hover::after { transform: scaleX(1); }
 
-    .predict-btn {
-      background: #e10600;
-      color: #fff;
-      border: none;
-      padding: 14px 40px;
-      border-radius: 8px;
+    .driver-card.selected {
+      background: #1a0005;
+      border-color: var(--red);
+    }
+
+    .driver-card.selected::after { transform: scaleX(1); }
+
+    .driver-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 8px;
+      transition: color 0.15s;
+    }
+
+    .driver-card.selected .driver-num { color: #2a0008; }
+
+    .driver-name {
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 1rem;
       font-weight: 700;
-      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+
+    .driver-team {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
       letter-spacing: 1px;
-      transition: opacity 0.2s;
-      margin-bottom: 40px;
+      text-transform: uppercase;
     }
 
-    .predict-btn:hover { opacity: 0.85; }
-    .predict-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* Results */
-    .results { display: flex; flex-direction: column; gap: 14px; }
-
-    .result-card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 18px 24px;
-      display: grid;
-      grid-template-columns: 40px 1fr 1fr 1fr;
+    .driver-check {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 18px; height: 18px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: center;
+      font-size: 0.65rem;
+      transition: all 0.15s;
     }
 
-    .result-card.first { border-color: #f5c518; }
-    .result-card.second { border-color: #aaa; }
-    .result-card.third { border-color: #cd7f32; }
+    .driver-card.selected .driver-check {
+      background: var(--red);
+      border-color: var(--red);
+    }
 
-    .rank { font-size: 1.4rem; font-weight: 800; color: #555; }
-    .result-card.first .rank { color: #f5c518; }
-    .result-card.second .rank { color: #aaa; }
-    .result-card.third .rank { color: #cd7f32; }
+    /* ── SELECT COUNT ── */
+    .select-status {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
 
-    .result-name { font-weight: 600; font-size: 1rem; text-transform: capitalize; }
-    .result-team { font-size: 0.78rem; color: #888; text-transform: capitalize; }
+    .select-status span { color: var(--red); }
 
-    .stat { text-align: center; }
-    .stat-value { font-size: 1.2rem; font-weight: 700; color: #e10600; }
-    .stat-label { font-size: 0.7rem; color: #666; margin-top: 2px; }
+    /* ── PREDICT BTN ── */
+    .predict-wrap {
+      margin-bottom: 56px;
+    }
 
-    .bar-wrap { height: 4px; background: #333; border-radius: 2px; margin-top: 6px; }
-    .bar { height: 4px; background: #e10600; border-radius: 2px; transition: width 0.6s ease; }
+    .predict-btn {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 18px 56px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
 
-    .loading { color: #888; font-size: 0.9rem; padding: 20px 0; }
-    .error { color: #e10600; font-size: 0.9rem; padding: 10px 0; }
+    .predict-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.1);
+      transition: left 0.3s;
+    }
 
-    .section { margin-bottom: 32px; }
-    .selected-count { font-size: 0.8rem; color: #888; margin-bottom: 12px; }
+    .predict-btn:hover:not(:disabled)::before { left: 100%; }
+    .predict-btn:hover:not(:disabled) { background: #c0001f; }
+    .predict-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+    /* ── RESULTS ── */
+    .results-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .result-row {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      display: grid;
+      grid-template-columns: 60px 1fr 160px 160px 120px;
+      align-items: center;
+      padding: 20px 24px;
+      transition: border-left-color 0.2s;
+      animation: slideIn 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .result-row:nth-child(1) { border-left-color: var(--gold); animation-delay: 0.05s; }
+    .result-row:nth-child(2) { border-left-color: var(--silver); animation-delay: 0.1s; }
+    .result-row:nth-child(3) { border-left-color: var(--bronze); animation-delay: 0.15s; }
+    .result-row:nth-child(n+4) { animation-delay: 0.2s; }
+
+    .result-pos {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .result-row:nth-child(1) .result-pos { color: var(--gold); }
+    .result-row:nth-child(2) .result-pos { color: var(--silver); }
+    .result-row:nth-child(3) .result-pos { color: var(--bronze); }
+
+    .result-driver {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .result-constructor {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
+
+    .result-stat {
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .result-row:nth-child(1) .stat-val { color: var(--red); }
+
+    .stat-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .stat-bar {
+      height: 3px;
+      background: var(--red);
+      width: 0;
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .result-pts {
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .result-pts-val {
+      font-size: 1.2rem;
+      color: var(--text);
+      display: block;
+    }
+
+    /* ── RESULTS HEADER ── */
+    .results-header {
+      display: grid;
+      grid-template-columns: 60px 1fr 160px 160px 120px;
+      padding: 8px 24px;
+      margin-bottom: 4px;
+    }
+
+    .results-header span {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .results-header span:first-child,
+    .results-header span:nth-child(2) { text-align: left; }
+
+    .loading-state {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding: 32px 0;
+      letter-spacing: 2px;
+    }
+
+    .loading-state::after {
+      content: '...';
+      animation: dots 1.2s infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+
+    .error-state {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--red);
+      padding: 16px 0;
+      letter-spacing: 1px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <h1>🏎️ F1 Race Predictor</h1>
-    <span>Powered by Random Forest ML • 24 years of race data</span>
+  <div class="logo">
+    <div class="logo-f1">F1</div>
+    <div class="logo-title">Race Predictor</div>
   </div>
+  <div class="header-meta">ML MODEL · 2000–2024 · 10K+ RACES</div>
 </header>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    VERSTAPPEN &nbsp;·&nbsp; HAMILTON &nbsp;·&nbsp; LECLERC &nbsp;·&nbsp; NORRIS &nbsp;·&nbsp; SAINZ &nbsp;·&nbsp; RUSSELL &nbsp;·&nbsp; ALONSO &nbsp;·&nbsp; PIASTRI &nbsp;·&nbsp; MONACO &nbsp;·&nbsp; SILVERSTONE &nbsp;·&nbsp; MONZA &nbsp;·&nbsp; SPA &nbsp;·&nbsp; SUZUKA &nbsp;·&nbsp; BAHRAIN &nbsp;·&nbsp; ZANDVOORT &nbsp;·&nbsp; RANDOM FOREST · 96% WINNER ACCURACY · 90% PODIUM ACCURACY &nbsp;·&nbsp; VERSTAPPEN &nbsp;·&nbsp; HAMILTON &nbsp;·&nbsp; LECLERC &nbsp;·&nbsp; NORRIS &nbsp;·&nbsp; SAINZ &nbsp;·&nbsp; RUSSELL &nbsp;·&nbsp; ALONSO &nbsp;·&nbsp; PIASTRI &nbsp;·&nbsp; MONACO &nbsp;·&nbsp; SILVERSTONE &nbsp;·&nbsp; MONZA &nbsp;·&nbsp; SPA &nbsp;·&nbsp; SUZUKA &nbsp;·&nbsp; BAHRAIN &nbsp;·&nbsp; ZANDVOORT &nbsp;·&nbsp; RANDOM FOREST · 96% WINNER ACCURACY · 90% PODIUM ACCURACY &nbsp;·&nbsp;
+  </div>
+</div>
 
 <div class="container">
 
-  <div class="section">
-    <h2>1. Pick a Circuit</h2>
-    <div class="circuits" id="circuits">
-      <div class="loading">Loading circuits...</div>
-    </div>
+  <!-- CIRCUIT -->
+  <div class="section-label">01 — Select Circuit</div>
+  <div class="section-title">Where are we racing?</div>
+  <div class="circuit-grid" id="circuits">
+    <div class="loading-state">Loading circuits</div>
   </div>
 
-  <div class="section">
-    <h2>2. Select Drivers</h2>
-    <div class="selected-count" id="selectedCount">Select up to 6 drivers</div>
-    <div class="drivers" id="drivers">
-      <div class="loading">Loading drivers...</div>
-    </div>
+  <hr class="divider">
+
+  <!-- DRIVERS -->
+  <div class="section-label">02 — Select Drivers</div>
+  <div class="section-title">Build your grid</div>
+  <div class="select-status" id="selectStatus">SELECT <span>2–6</span> DRIVERS TO COMPARE</div>
+  <div class="drivers-grid" id="drivers">
+    <div class="loading-state">Loading drivers</div>
   </div>
 
-  <button class="predict-btn" id="predictBtn" disabled onclick="predict()">
-    PREDICT RACE
-  </button>
+  <hr class="divider">
 
-  <div class="section">
-    <h2>Results</h2>
-    <div class="results" id="results"></div>
+  <!-- PREDICT -->
+  <div class="predict-wrap">
+    <div class="section-label">03 — Run Prediction</div>
+    <button class="predict-btn" id="predictBtn" disabled onclick="predict()">
+      ▶ &nbsp; Predict Race
+    </button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultsSection" style="display:none">
+    <div class="section-label">04 — Results</div>
+    <div class="section-title" id="resultsTitle">Race Prediction</div>
+    <div class="results-header">
+      <span>POS</span>
+      <span>Driver</span>
+      <span>Win %</span>
+      <span>Podium %</span>
+      <span>Pts</span>
+    </div>
+    <div class="results-grid" id="results"></div>
   </div>
 
 </div>
@@ -174,9 +560,15 @@
   const API = "http://localhost:8000";
   let selectedCircuit = null;
   let selectedDrivers = [];
-  let allDrivers = [];
 
-  // hardcoded constructor map for known drivers
+  const circuitMeta = {
+    monaco: "Monte Carlo, MON", monza: "Monza, ITA", silverstone: "Silverstone, GBR",
+    spa: "Spa-Francorchamps, BEL", suzuka: "Suzuka, JPN", bahrain: "Sakhir, BHR",
+    albert_park: "Melbourne, AUS", americas: "Austin, USA", interlagos: "São Paulo, BRA",
+    zandvoort: "Zandvoort, NED", hungaroring: "Budapest, HUN", barcelona: "Barcelona, ESP",
+    marina_bay: "Singapore, SGP", yas_marina: "Abu Dhabi, UAE", baku: "Baku, AZE"
+  };
+
   const constructorMap = {
     max_verstappen: "red_bull", perez: "red_bull",
     leclerc: "ferrari", sainz: "ferrari",
@@ -187,8 +579,16 @@
     albon: "williams", sargeant: "williams",
     hulkenberg: "haas", kevin_magnussen: "haas",
     bottas: "alfa", zhou: "alfa",
-    tsunoda: "alphatauri", de_vries: "alphatauri",
-    lawson: "alphatauri", ricciardo: "alphatauri",
+    tsunoda: "alphatauri", ricciardo: "alphatauri",
+    lawson: "alphatauri",
+  };
+
+  const driverNums = {
+    max_verstappen: "1", leclerc: "16", hamilton: "44", norris: "4",
+    sainz: "55", russell: "63", alonso: "14", piastri: "81",
+    perez: "11", stroll: "18", gasly: "10", ocon: "31",
+    albon: "23", hulkenberg: "27", bottas: "77", tsunoda: "22",
+    zhou: "24", ricciardo: "3", lawson: "40", kevin_magnussen: "20",
   };
 
   async function loadCircuits() {
@@ -197,17 +597,15 @@
     const container = document.getElementById("circuits");
     container.innerHTML = "";
 
-    // show only well known circuits
-    const popular = ["monaco", "monza", "silverstone", "spa", "suzuka",
-      "bahrain", "albert_park", "americas", "interlagos", "zandvoort",
-      "hungaroring", "barcelona", "marina_bay", "yas_marina", "baku"];
-
+    const popular = ["monaco","monza","silverstone","spa","suzuka","bahrain",
+      "albert_park","americas","interlagos","zandvoort","hungaroring",
+      "barcelona","marina_bay","yas_marina","baku"];
     const filtered = data.circuits.filter(c => popular.includes(c));
 
     filtered.forEach(c => {
       const btn = document.createElement("button");
       btn.className = "circuit-btn";
-      btn.textContent = c.replace(/_/g, " ");
+      btn.innerHTML = `${c.replace(/_/g," ")}<div class="circuit-country">${circuitMeta[c] || ""}</div>`;
       btn.onclick = () => selectCircuit(c, btn);
       container.appendChild(btn);
     });
@@ -216,22 +614,22 @@
   async function loadDrivers() {
     const res = await fetch(`${API}/drivers`);
     const data = await res.json();
-    allDrivers = data.drivers.filter(d => constructorMap[d]);
-    renderDrivers();
-  }
-
-  function renderDrivers() {
+    const drivers = data.drivers.filter(d => constructorMap[d]);
     const container = document.getElementById("drivers");
     container.innerHTML = "";
-    allDrivers.forEach((d, i) => {
+
+    drivers.forEach(d => {
       const card = document.createElement("div");
-      card.className = "driver-card" + (selectedDrivers.includes(d) ? " selected" : "");
+      card.className = "driver-card";
+      const num = driverNums[d] || "??";
+      const team = (constructorMap[d] || "").replace(/_/g," ");
       card.innerHTML = `
-        <div class="driver-name">${d.replace(/_/g, " ")}</div>
-        <div class="driver-team">${(constructorMap[d] || "").replace(/_/g, " ")}</div>
-        <div class="driver-pos">P${i + 1} qualifying</div>
+        <div class="driver-check">✓</div>
+        <div class="driver-num">${num}</div>
+        <div class="driver-name">${d.replace(/_/g," ")}</div>
+        <div class="driver-team">${team}</div>
       `;
-      card.onclick = () => toggleDriver(d, i + 1);
+      card.onclick = () => toggleDriver(d, card);
       container.appendChild(card);
     });
   }
@@ -243,27 +641,37 @@
     updateBtn();
   }
 
-  function toggleDriver(driver, pos) {
+  function toggleDriver(driver, card) {
     if (selectedDrivers.includes(driver)) {
       selectedDrivers = selectedDrivers.filter(d => d !== driver);
+      card.classList.remove("selected");
     } else {
       if (selectedDrivers.length >= 6) return;
       selectedDrivers.push(driver);
+      card.classList.add("selected");
     }
-    document.getElementById("selectedCount").textContent =
-      `${selectedDrivers.length}/6 drivers selected`;
-    renderDrivers();
+    const count = selectedDrivers.length;
+    const status = document.getElementById("selectStatus");
+    status.innerHTML = count === 0
+      ? `SELECT <span>2–6</span> DRIVERS TO COMPARE`
+      : `<span>${count}</span> / 6 DRIVERS SELECTED`;
     updateBtn();
   }
 
   function updateBtn() {
-    const btn = document.getElementById("predictBtn");
-    btn.disabled = !(selectedCircuit && selectedDrivers.length >= 2);
+    document.getElementById("predictBtn").disabled =
+      !(selectedCircuit && selectedDrivers.length >= 2);
   }
 
   async function predict() {
+    const resultsSection = document.getElementById("resultsSection");
     const resultsEl = document.getElementById("results");
-    resultsEl.innerHTML = '<div class="loading">Running prediction...</div>';
+    resultsSection.style.display = "block";
+    resultsEl.innerHTML = '<div class="loading-state">Computing prediction</div>';
+    resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    document.getElementById("resultsTitle").textContent =
+      `${selectedCircuit.replace(/_/g," ").toUpperCase()} — ${new Date().getFullYear()} PREDICTION`;
 
     const drivers = selectedDrivers.map((d, i) => ({
       driver: d,
@@ -284,36 +692,43 @@
       });
 
       const data = await res.json();
-      const predictions = data.predictions;
-
+      const preds = data.predictions;
       resultsEl.innerHTML = "";
-      const rankClass = ["first", "second", "third"];
 
-      predictions.forEach((p, i) => {
-        const card = document.createElement("div");
-        card.className = "result-card " + (rankClass[i] || "");
-        card.innerHTML = `
-          <div class="rank">${i + 1}</div>
+      preds.forEach((p, i) => {
+        const row = document.createElement("div");
+        row.className = "result-row";
+        row.innerHTML = `
+          <div class="result-pos">${i + 1}</div>
           <div>
-            <div class="result-name">${p.driver.replace(/_/g, " ")}</div>
-            <div class="result-team">${p.constructor.replace(/_/g, " ")}</div>
+            <div class="result-driver">${p.driver.replace(/_/g," ")}</div>
+            <div class="result-constructor">${p.constructor.replace(/_/g," ")}</div>
           </div>
-          <div class="stat">
-            <div class="stat-value">${p.win_probability}%</div>
+          <div class="result-stat">
+            <div class="stat-val">${p.win_probability}%</div>
+            <div class="stat-bar-wrap"><div class="stat-bar" id="wb${i}"></div></div>
             <div class="stat-label">Win chance</div>
-            <div class="bar-wrap"><div class="bar" style="width:${p.win_probability}%"></div></div>
           </div>
-          <div class="stat">
-            <div class="stat-value">${p.podium_probability}%</div>
+          <div class="result-stat">
+            <div class="stat-val" style="color:var(--muted);font-size:1.3rem">${p.podium_probability}%</div>
+            <div class="stat-bar-wrap"><div class="stat-bar" id="pb${i}" style="background:#444"></div></div>
             <div class="stat-label">Podium chance</div>
-            <div class="bar-wrap"><div class="bar" style="width:${p.podium_probability}%"></div></div>
+          </div>
+          <div class="result-pts">
+            <span class="result-pts-val">${p.predicted_championship_points}</span>
+            pts
           </div>
         `;
-        resultsEl.appendChild(card);
+        resultsEl.appendChild(row);
+
+        setTimeout(() => {
+          document.getElementById(`wb${i}`).style.width = `${p.win_probability}%`;
+          document.getElementById(`pb${i}`).style.width = `${p.podium_probability}%`;
+        }, 100 + i * 80);
       });
 
     } catch (e) {
-      resultsEl.innerHTML = '<div class="error">Error connecting to API. Make sure uvicorn is running!</div>';
+      resultsEl.innerHTML = '<div class="error-state">CONNECTION ERROR — IS THE API RUNNING?</div>';
     }
   }
 
