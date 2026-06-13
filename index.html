@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>F1 Race Predictor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #e10600;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: 1px; }
+    header span { font-size: 0.9rem; opacity: 0.85; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+    h2 { font-size: 1.1rem; color: #aaa; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Circuit selector */
+    .circuits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .circuit-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #ccc;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      text-transform: capitalize;
+    }
+
+    .circuit-btn:hover { border-color: #e10600; color: #fff; }
+    .circuit-btn.active { background: #e10600; border-color: #e10600; color: #fff; }
+
+    /* Driver selector */
+    .drivers {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .driver-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .driver-card:hover { border-color: #e10600; }
+    .driver-card.selected { border-color: #e10600; background: #2a0a0a; }
+
+    .driver-name { font-weight: 600; font-size: 0.95rem; text-transform: capitalize; }
+    .driver-team { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: capitalize; }
+    .driver-pos { font-size: 0.75rem; color: #e10600; margin-top: 6px; }
+
+    .predict-btn {
+      background: #e10600;
+      color: #fff;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: opacity 0.2s;
+      margin-bottom: 40px;
+    }
+
+    .predict-btn:hover { opacity: 0.85; }
+    .predict-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Results */
+    .results { display: flex; flex-direction: column; gap: 14px; }
+
+    .result-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 18px 24px;
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .result-card.first { border-color: #f5c518; }
+    .result-card.second { border-color: #aaa; }
+    .result-card.third { border-color: #cd7f32; }
+
+    .rank { font-size: 1.4rem; font-weight: 800; color: #555; }
+    .result-card.first .rank { color: #f5c518; }
+    .result-card.second .rank { color: #aaa; }
+    .result-card.third .rank { color: #cd7f32; }
+
+    .result-name { font-weight: 600; font-size: 1rem; text-transform: capitalize; }
+    .result-team { font-size: 0.78rem; color: #888; text-transform: capitalize; }
+
+    .stat { text-align: center; }
+    .stat-value { font-size: 1.2rem; font-weight: 700; color: #e10600; }
+    .stat-label { font-size: 0.7rem; color: #666; margin-top: 2px; }
+
+    .bar-wrap { height: 4px; background: #333; border-radius: 2px; margin-top: 6px; }
+    .bar { height: 4px; background: #e10600; border-radius: 2px; transition: width 0.6s ease; }
+
+    .loading { color: #888; font-size: 0.9rem; padding: 20px 0; }
+    .error { color: #e10600; font-size: 0.9rem; padding: 10px 0; }
+
+    .section { margin-bottom: 32px; }
+    .selected-count { font-size: 0.8rem; color: #888; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🏎️ F1 Race Predictor</h1>
+    <span>Powered by Random Forest ML • 24 years of race data</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <h2>1. Pick a Circuit</h2>
+    <div class="circuits" id="circuits">
+      <div class="loading">Loading circuits...</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>2. Select Drivers</h2>
+    <div class="selected-count" id="selectedCount">Select up to 6 drivers</div>
+    <div class="drivers" id="drivers">
+      <div class="loading">Loading drivers...</div>
+    </div>
+  </div>
+
+  <button class="predict-btn" id="predictBtn" disabled onclick="predict()">
+    PREDICT RACE
+  </button>
+
+  <div class="section">
+    <h2>Results</h2>
+    <div class="results" id="results"></div>
+  </div>
+
+</div>
+
+<script>
+  const API = "http://localhost:8000";
+  let selectedCircuit = null;
+  let selectedDrivers = [];
+  let allDrivers = [];
+
+  // hardcoded constructor map for known drivers
+  const constructorMap = {
+    max_verstappen: "red_bull", perez: "red_bull",
+    leclerc: "ferrari", sainz: "ferrari",
+    hamilton: "mercedes", russell: "mercedes",
+    norris: "mclaren", piastri: "mclaren",
+    alonso: "aston_martin", stroll: "aston_martin",
+    gasly: "alpine", ocon: "alpine",
+    albon: "williams", sargeant: "williams",
+    hulkenberg: "haas", kevin_magnussen: "haas",
+    bottas: "alfa", zhou: "alfa",
+    tsunoda: "alphatauri", de_vries: "alphatauri",
+    lawson: "alphatauri", ricciardo: "alphatauri",
+  };
+
+  async function loadCircuits() {
+    const res = await fetch(`${API}/circuits`);
+    const data = await res.json();
+    const container = document.getElementById("circuits");
+    container.innerHTML = "";
+
+    // show only well known circuits
+    const popular = ["monaco", "monza", "silverstone", "spa", "suzuka",
+      "bahrain", "albert_park", "americas", "interlagos", "zandvoort",
+      "hungaroring", "barcelona", "marina_bay", "yas_marina", "baku"];
+
+    const filtered = data.circuits.filter(c => popular.includes(c));
+
+    filtered.forEach(c => {
+      const btn = document.createElement("button");
+      btn.className = "circuit-btn";
+      btn.textContent = c.replace(/_/g, " ");
+      btn.onclick = () => selectCircuit(c, btn);
+      container.appendChild(btn);
+    });
+  }
+
+  async function loadDrivers() {
+    const res = await fetch(`${API}/drivers`);
+    const data = await res.json();
+    allDrivers = data.drivers.filter(d => constructorMap[d]);
+    renderDrivers();
+  }
+
+  function renderDrivers() {
+    const container = document.getElementById("drivers");
+    container.innerHTML = "";
+    allDrivers.forEach((d, i) => {
+      const card = document.createElement("div");
+      card.className = "driver-card" + (selectedDrivers.includes(d) ? " selected" : "");
+      card.innerHTML = `
+        <div class="driver-name">${d.replace(/_/g, " ")}</div>
+        <div class="driver-team">${(constructorMap[d] || "").replace(/_/g, " ")}</div>
+        <div class="driver-pos">P${i + 1} qualifying</div>
+      `;
+      card.onclick = () => toggleDriver(d, i + 1);
+      container.appendChild(card);
+    });
+  }
+
+  function selectCircuit(circuit, btn) {
+    selectedCircuit = circuit;
+    document.querySelectorAll(".circuit-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    updateBtn();
+  }
+
+  function toggleDriver(driver, pos) {
+    if (selectedDrivers.includes(driver)) {
+      selectedDrivers = selectedDrivers.filter(d => d !== driver);
+    } else {
+      if (selectedDrivers.length >= 6) return;
+      selectedDrivers.push(driver);
+    }
+    document.getElementById("selectedCount").textContent =
+      `${selectedDrivers.length}/6 drivers selected`;
+    renderDrivers();
+    updateBtn();
+  }
+
+  function updateBtn() {
+    const btn = document.getElementById("predictBtn");
+    btn.disabled = !(selectedCircuit && selectedDrivers.length >= 2);
+  }
+
+  async function predict() {
+    const resultsEl = document.getElementById("results");
+    resultsEl.innerHTML = '<div class="loading">Running prediction...</div>';
+
+    const drivers = selectedDrivers.map((d, i) => ({
+      driver: d,
+      constructor: constructorMap[d],
+      quali_position: i + 1,
+      grid: i + 1,
+      avg_finish_last3: 8,
+      avg_points_last3: 8,
+      championship_points: 50,
+      championship_position: i + 1,
+    }));
+
+    try {
+      const res = await fetch(`${API}/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ circuit: selectedCircuit, drivers }),
+      });
+
+      const data = await res.json();
+      const predictions = data.predictions;
+
+      resultsEl.innerHTML = "";
+      const rankClass = ["first", "second", "third"];
+
+      predictions.forEach((p, i) => {
+        const card = document.createElement("div");
+        card.className = "result-card " + (rankClass[i] || "");
+        card.innerHTML = `
+          <div class="rank">${i + 1}</div>
+          <div>
+            <div class="result-name">${p.driver.replace(/_/g, " ")}</div>
+            <div class="result-team">${p.constructor.replace(/_/g, " ")}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">${p.win_probability}%</div>
+            <div class="stat-label">Win chance</div>
+            <div class="bar-wrap"><div class="bar" style="width:${p.win_probability}%"></div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">${p.podium_probability}%</div>
+            <div class="stat-label">Podium chance</div>
+            <div class="bar-wrap"><div class="bar" style="width:${p.podium_probability}%"></div></div>
+          </div>
+        `;
+        resultsEl.appendChild(card);
+      });
+
+    } catch (e) {
+      resultsEl.innerHTML = '<div class="error">Error connecting to API. Make sure uvicorn is running!</div>';
+    }
+  }
+
+  loadCircuits();
+  loadDrivers();
+</script>
+</body>
+</html>
