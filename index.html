@@ -7,492 +7,150 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
-      --red: #E8002D;
-      --red-dark: #9B0020;
-      --black: #080808;
-      --panel: #111111;
-      --border: #222222;
-      --text: #F0F0F0;
-      --muted: #666666;
-      --gold: #FFD700;
-      --silver: #C0C0C0;
-      --bronze: #CD7F32;
+      --red: #E8002D; --red-dark: #9B0020; --black: #080808;
+      --panel: #111111; --border: #222222; --text: #F0F0F0;
+      --muted: #666666; --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--black); color: var(--text); font-family: 'Barlow', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-    body {
-      background: var(--black);
-      color: var(--text);
-      font-family: 'Barlow', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── HEADER ── */
     header {
-      position: relative;
-      background: var(--black);
-      border-bottom: 3px solid var(--red);
-      padding: 0 48px;
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      overflow: hidden;
+      position: relative; background: var(--black); border-bottom: 3px solid var(--red);
+      padding: 0 48px; height: 72px; display: flex; align-items: center;
+      justify-content: space-between; overflow: hidden;
     }
+    header::before { content: ''; position: absolute; left: 0; top: 0; width: 6px; height: 100%; background: var(--red); }
+    .logo { display: flex; align-items: baseline; gap: 12px; }
+    .logo-f1 { font-family: 'Barlow Condensed', sans-serif; font-size: 2.4rem; font-weight: 900; color: var(--red); letter-spacing: -1px; line-height: 1; }
+    .logo-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .header-meta { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; }
 
-    header::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0;
-      width: 6px; height: 100%;
-      background: var(--red);
-    }
+    .ticker { background: var(--red); padding: 6px 0; overflow: hidden; white-space: nowrap; }
+    .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: white; }
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    .logo {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 48px 32px; }
 
-    .logo-f1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2.4rem;
-      font-weight: 900;
-      color: var(--red);
-      letter-spacing: -1px;
-      line-height: 1;
-    }
+    .section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--red); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
 
-    .logo-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--text);
-    }
+    /* CIRCUITS */
+    .circuit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 56px; }
+    .circuit-btn { background: var(--panel); border: 1px solid var(--border); color: var(--muted); padding: 12px 16px; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s; text-align: left; position: relative; overflow: hidden; }
+    .circuit-btn::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background: var(--red); transform: scaleY(0); transition: transform 0.15s; }
+    .circuit-btn:hover { border-color: #444; color: var(--text); }
+    .circuit-btn:hover::before, .circuit-btn.active::before { transform: scaleY(1); }
+    .circuit-btn.active { background: #1a0005; border-color: var(--red); color: var(--text); }
+    .circuit-country { font-size: 0.65rem; font-weight: 400; letter-spacing: 2px; color: var(--muted); margin-top: 2px; font-family: 'Barlow', sans-serif; }
 
-    .header-meta {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 1px;
-    }
-
-    /* ── TICKER ── */
-    .ticker {
-      background: var(--red);
-      padding: 6px 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .ticker-inner {
-      display: inline-block;
-      animation: ticker 30s linear infinite;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: white;
-    }
-
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ── LAYOUT ── */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 48px 32px;
-    }
-
-    /* ── SECTION LABELS ── */
-    .section-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .section-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-    }
-
-    /* ── CIRCUIT GRID ── */
-    .circuit-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 10px;
-      margin-bottom: 56px;
-    }
-
-    .circuit-btn {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 12px 16px;
-      cursor: pointer;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: all 0.15s;
-      text-align: left;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .circuit-btn::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0;
-      width: 3px; height: 100%;
-      background: var(--red);
-      transform: scaleY(0);
-      transition: transform 0.15s;
-    }
-
-    .circuit-btn:hover {
-      border-color: #444;
-      color: var(--text);
-    }
-
-    .circuit-btn:hover::before { transform: scaleY(1); }
-
-    .circuit-btn.active {
-      background: #1a0005;
-      border-color: var(--red);
-      color: var(--text);
-    }
-
-    .circuit-btn.active::before { transform: scaleY(1); }
-
-    .circuit-country {
-      font-size: 0.65rem;
-      font-weight: 400;
-      letter-spacing: 2px;
-      color: var(--muted);
-      margin-top: 2px;
-      font-family: 'Barlow', sans-serif;
-    }
-
-    .circuit-btn.active .circuit-country { color: #e8002d99; }
-
-    /* ── DRIVER GRID ── */
-    .drivers-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
-      margin-bottom: 40px;
-    }
+    /* DRIVER CARDS */
+    .drivers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 40px; }
 
     .driver-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-      overflow: hidden;
+      background: var(--panel); border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.2s; position: relative;
+      overflow: hidden; aspect-ratio: 3/4; display: flex; flex-direction: column; justify-content: flex-end;
     }
+    .driver-card:hover { border-color: #555; transform: translateY(-2px); }
+    .driver-card.selected { border-color: var(--red); }
 
-    .driver-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 100%; height: 2px;
-      background: var(--red);
-      transform: scaleX(0);
-      transition: transform 0.2s;
-      transform-origin: left;
+    .driver-img-wrap {
+      position: absolute; top: 0; left: 0; width: 100%; height: 75%;
+      overflow: hidden; background: #1a1a1a;
     }
-
-    .driver-card:hover { border-color: #444; }
-    .driver-card:hover::after { transform: scaleX(1); }
-
-    .driver-card.selected {
-      background: #1a0005;
-      border-color: var(--red);
+    .driver-img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top center;
+      filter: grayscale(20%); transition: filter 0.2s;
     }
+    .driver-card:hover .driver-img, .driver-card.selected .driver-img { filter: grayscale(0%); }
 
-    .driver-card.selected::after { transform: scaleX(1); }
-
-    .driver-num {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2rem;
-      font-weight: 900;
+    .driver-img-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 3rem; font-weight: 900;
       color: var(--border);
-      line-height: 1;
-      margin-bottom: 8px;
-      transition: color 0.15s;
     }
 
-    .driver-card.selected .driver-num { color: #2a0008; }
-
-    .driver-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      line-height: 1.1;
+    .driver-info {
+      position: relative; z-index: 2; background: linear-gradient(to top, #111 60%, transparent);
+      padding: 12px 10px 10px;
     }
 
-    .driver-team {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 4px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
+    .team-logo-wrap { position: absolute; top: 8px; right: 8px; z-index: 3; }
+    .team-logo { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8)); }
 
-    .driver-check {
-      position: absolute;
-      top: 10px; right: 10px;
-      width: 18px; height: 18px;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
-      transition: all 0.15s;
+    .driver-num-badge {
+      position: absolute; top: 8px; left: 8px; z-index: 3;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900;
+      color: white; background: rgba(0,0,0,0.6); padding: 2px 6px;
+      border-left: 2px solid var(--red);
     }
+    .driver-card.selected .driver-num-badge { background: var(--red); border-color: white; }
 
-    .driver-card.selected .driver-check {
-      background: var(--red);
-      border-color: var(--red);
+    .driver-name { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; }
+    .driver-team-name { font-size: 0.65rem; color: var(--muted); margin-top: 3px; letter-spacing: 1px; text-transform: uppercase; }
+
+    .driver-selected-badge {
+      position: absolute; bottom: 8px; right: 8px; z-index: 3;
+      width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: transparent; transition: all 0.15s;
     }
+    .driver-card.selected .driver-selected-badge { background: var(--red); border-color: var(--red); color: white; }
 
-    /* ── SELECT COUNT ── */
-    .select-status {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 20px;
-      letter-spacing: 1px;
-    }
-
+    .select-status { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; letter-spacing: 1px; }
     .select-status span { color: var(--red); }
 
-    /* ── PREDICT BTN ── */
-    .predict-wrap {
-      margin-bottom: 56px;
-    }
-
-    .predict-btn {
-      background: var(--red);
-      color: white;
-      border: none;
-      padding: 18px 56px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .predict-btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: rgba(255,255,255,0.1);
-      transition: left 0.3s;
-    }
-
-    .predict-btn:hover:not(:disabled)::before { left: 100%; }
+    /* PREDICT */
+    .predict-wrap { margin-bottom: 56px; }
+    .predict-btn { background: var(--red); color: white; border: none; padding: 18px 56px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
     .predict-btn:hover:not(:disabled) { background: #c0001f; }
     .predict-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
 
-    /* ── RESULTS ── */
-    .results-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
+    /* RESULTS */
+    .results-grid { display: flex; flex-direction: column; gap: 2px; }
     .result-row {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--border);
-      display: grid;
-      grid-template-columns: 60px 1fr 160px 160px 120px;
-      align-items: center;
-      padding: 20px 24px;
-      transition: border-left-color 0.2s;
-      animation: slideIn 0.3s ease forwards;
-      opacity: 0;
+      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--border);
+      display: grid; grid-template-columns: 60px 240px 1fr 1fr 100px;
+      align-items: center; padding: 16px 24px; gap: 16px;
+      animation: slideIn 0.3s ease forwards; opacity: 0;
     }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     .result-row:nth-child(1) { border-left-color: var(--gold); animation-delay: 0.05s; }
     .result-row:nth-child(2) { border-left-color: var(--silver); animation-delay: 0.1s; }
     .result-row:nth-child(3) { border-left-color: var(--bronze); animation-delay: 0.15s; }
     .result-row:nth-child(n+4) { animation-delay: 0.2s; }
 
-    .result-pos {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--muted);
-    }
-
+    .result-pos { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 900; color: var(--muted); }
     .result-row:nth-child(1) .result-pos { color: var(--gold); }
     .result-row:nth-child(2) .result-pos { color: var(--silver); }
     .result-row:nth-child(3) .result-pos { color: var(--bronze); }
 
-    .result-driver {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    .result-driver-wrap { display: flex; align-items: center; gap: 12px; }
+    .result-driver-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--border); flex-shrink: 0; }
+    .result-driver-img-placeholder { width: 48px; height: 48px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; color: var(--muted); flex-shrink: 0; }
+    .result-team-logo { width: 24px; height: 24px; object-fit: contain; }
 
-    .result-constructor {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-top: 3px;
-    }
+    .result-driver { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; }
+    .result-constructor { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
 
-    .result-stat {
-      text-align: center;
-    }
-
-    .stat-val {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1;
-    }
-
+    .result-stat { text-align: center; }
+    .stat-val { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 800; line-height: 1; }
     .result-row:nth-child(1) .stat-val { color: var(--red); }
+    .stat-bar-wrap { height: 3px; background: var(--border); margin-top: 6px; }
+    .stat-bar { height: 3px; background: var(--red); width: 0; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .stat-label { font-size: 0.62rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
 
-    .stat-bar-wrap {
-      height: 3px;
-      background: var(--border);
-      margin-top: 6px;
-      width: 100%;
-    }
+    .result-pts { text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: var(--muted); }
+    .result-pts-val { font-size: 1.1rem; color: var(--text); display: block; }
 
-    .stat-bar {
-      height: 3px;
-      background: var(--red);
-      width: 0;
-      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    .results-header { display: grid; grid-template-columns: 60px 240px 1fr 1fr 100px; padding: 8px 24px; margin-bottom: 4px; gap: 16px; }
+    .results-header span { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; text-align: center; }
+    .results-header span:first-child, .results-header span:nth-child(2) { text-align: left; }
 
-    .stat-label {
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    .result-pts {
-      text-align: center;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1rem;
-      color: var(--muted);
-    }
-
-    .result-pts-val {
-      font-size: 1.2rem;
-      color: var(--text);
-      display: block;
-    }
-
-    /* ── RESULTS HEADER ── */
-    .results-header {
-      display: grid;
-      grid-template-columns: 60px 1fr 160px 160px 120px;
-      padding: 8px 24px;
-      margin-bottom: 4px;
-    }
-
-    .results-header span {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-    }
-
-    .results-header span:first-child,
-    .results-header span:nth-child(2) { text-align: left; }
-
-    .loading-state {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--muted);
-      padding: 32px 0;
-      letter-spacing: 2px;
-    }
-
-    .loading-state::after {
-      content: '...';
-      animation: dots 1.2s infinite;
-    }
-
-    @keyframes dots {
-      0%, 20% { content: '.'; }
-      40% { content: '..'; }
-      60%, 100% { content: '...'; }
-    }
-
-    .error-state {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--red);
-      padding: 16px 0;
-      letter-spacing: 1px;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 48px 0;
-    }
+    .loading-state { font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: var(--muted); padding: 32px 0; letter-spacing: 2px; }
+    .error-state { font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: var(--red); padding: 16px 0; letter-spacing: 1px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
   </style>
 </head>
 <body>
@@ -506,50 +164,34 @@
 </header>
 
 <div class="ticker">
-  <div class="ticker-inner">
-    VERSTAPPEN &nbsp;·&nbsp; HAMILTON &nbsp;·&nbsp; LECLERC &nbsp;·&nbsp; NORRIS &nbsp;·&nbsp; SAINZ &nbsp;·&nbsp; RUSSELL &nbsp;·&nbsp; ALONSO &nbsp;·&nbsp; PIASTRI &nbsp;·&nbsp; MONACO &nbsp;·&nbsp; SILVERSTONE &nbsp;·&nbsp; MONZA &nbsp;·&nbsp; SPA &nbsp;·&nbsp; SUZUKA &nbsp;·&nbsp; BAHRAIN &nbsp;·&nbsp; ZANDVOORT &nbsp;·&nbsp; RANDOM FOREST · 96% WINNER ACCURACY · 90% PODIUM ACCURACY &nbsp;·&nbsp; VERSTAPPEN &nbsp;·&nbsp; HAMILTON &nbsp;·&nbsp; LECLERC &nbsp;·&nbsp; NORRIS &nbsp;·&nbsp; SAINZ &nbsp;·&nbsp; RUSSELL &nbsp;·&nbsp; ALONSO &nbsp;·&nbsp; PIASTRI &nbsp;·&nbsp; MONACO &nbsp;·&nbsp; SILVERSTONE &nbsp;·&nbsp; MONZA &nbsp;·&nbsp; SPA &nbsp;·&nbsp; SUZUKA &nbsp;·&nbsp; BAHRAIN &nbsp;·&nbsp; ZANDVOORT &nbsp;·&nbsp; RANDOM FOREST · 96% WINNER ACCURACY · 90% PODIUM ACCURACY &nbsp;·&nbsp;
-  </div>
+  <div class="ticker-inner">VERSTAPPEN &nbsp;·&nbsp; HAMILTON &nbsp;·&nbsp; LECLERC &nbsp;·&nbsp; NORRIS &nbsp;·&nbsp; SAINZ &nbsp;·&nbsp; RUSSELL &nbsp;·&nbsp; ALONSO &nbsp;·&nbsp; PIASTRI &nbsp;·&nbsp; MONACO &nbsp;·&nbsp; SILVERSTONE &nbsp;·&nbsp; MONZA &nbsp;·&nbsp; SPA &nbsp;·&nbsp; SUZUKA &nbsp;·&nbsp; BAHRAIN &nbsp;·&nbsp; ZANDVOORT &nbsp;·&nbsp; RANDOM FOREST · 96% WINNER ACCURACY · 90% PODIUM ACCURACY &nbsp;·&nbsp; VERSTAPPEN &nbsp;·&nbsp; HAMILTON &nbsp;·&nbsp; LECLERC &nbsp;·&nbsp; NORRIS &nbsp;·&nbsp; SAINZ &nbsp;·&nbsp; RUSSELL &nbsp;·&nbsp; ALONSO &nbsp;·&nbsp; PIASTRI &nbsp;·&nbsp; MONACO &nbsp;·&nbsp; SILVERSTONE &nbsp;·&nbsp; MONZA &nbsp;·&nbsp; SPA &nbsp;·&nbsp; SUZUKA &nbsp;·&nbsp; BAHRAIN &nbsp;·&nbsp; ZANDVOORT &nbsp;·&nbsp; RANDOM FOREST · 96% WINNER ACCURACY · 90% PODIUM ACCURACY &nbsp;·&nbsp;</div>
 </div>
 
 <div class="container">
 
-  <!-- CIRCUIT -->
   <div class="section-label">01 — Select Circuit</div>
   <div class="section-title">Where are we racing?</div>
-  <div class="circuit-grid" id="circuits">
-    <div class="loading-state">Loading circuits</div>
-  </div>
+  <div class="circuit-grid" id="circuits"><div class="loading-state">Loading circuits</div></div>
 
   <hr class="divider">
 
-  <!-- DRIVERS -->
   <div class="section-label">02 — Select Drivers</div>
   <div class="section-title">Build your grid</div>
   <div class="select-status" id="selectStatus">SELECT <span>2–6</span> DRIVERS TO COMPARE</div>
-  <div class="drivers-grid" id="drivers">
-    <div class="loading-state">Loading drivers</div>
-  </div>
+  <div class="drivers-grid" id="drivers"><div class="loading-state">Loading drivers</div></div>
 
   <hr class="divider">
 
-  <!-- PREDICT -->
   <div class="predict-wrap">
     <div class="section-label">03 — Run Prediction</div>
-    <button class="predict-btn" id="predictBtn" disabled onclick="predict()">
-      ▶ &nbsp; Predict Race
-    </button>
+    <button class="predict-btn" id="predictBtn" disabled onclick="predict()">▶ &nbsp; Predict Race</button>
   </div>
 
-  <!-- RESULTS -->
   <div id="resultsSection" style="display:none">
     <div class="section-label">04 — Results</div>
     <div class="section-title" id="resultsTitle">Race Prediction</div>
     <div class="results-header">
-      <span>POS</span>
-      <span>Driver</span>
-      <span>Win %</span>
-      <span>Podium %</span>
-      <span>Pts</span>
+      <span>POS</span><span>Driver</span><span>Win %</span><span>Podium %</span><span>Pts</span>
     </div>
     <div class="results-grid" id="results"></div>
   </div>
@@ -557,183 +199,213 @@
 </div>
 
 <script>
-  const API = "http://localhost:8000";
-  let selectedCircuit = null;
-  let selectedDrivers = [];
+const API = "http://localhost:8000";
+let selectedCircuit = null, selectedDrivers = [];
 
-  const circuitMeta = {
-    monaco: "Monte Carlo, MON", monza: "Monza, ITA", silverstone: "Silverstone, GBR",
-    spa: "Spa-Francorchamps, BEL", suzuka: "Suzuka, JPN", bahrain: "Sakhir, BHR",
-    albert_park: "Melbourne, AUS", americas: "Austin, USA", interlagos: "São Paulo, BRA",
-    zandvoort: "Zandvoort, NED", hungaroring: "Budapest, HUN", barcelona: "Barcelona, ESP",
-    marina_bay: "Singapore, SGP", yas_marina: "Abu Dhabi, UAE", baku: "Baku, AZE"
-  };
+const circuitMeta = {
+  monaco:"Monte Carlo, MON", monza:"Monza, ITA", silverstone:"Silverstone, GBR",
+  spa:"Spa, BEL", suzuka:"Suzuka, JPN", bahrain:"Sakhir, BHR",
+  albert_park:"Melbourne, AUS", americas:"Austin, USA", interlagos:"São Paulo, BRA",
+  zandvoort:"Zandvoort, NED", hungaroring:"Budapest, HUN", barcelona:"Barcelona, ESP",
+  marina_bay:"Singapore, SGP", yas_marina:"Abu Dhabi, UAE", baku:"Baku, AZE"
+};
 
-  const constructorMap = {
-    max_verstappen: "red_bull", perez: "red_bull",
-    leclerc: "ferrari", sainz: "ferrari",
-    hamilton: "mercedes", russell: "mercedes",
-    norris: "mclaren", piastri: "mclaren",
-    alonso: "aston_martin", stroll: "aston_martin",
-    gasly: "alpine", ocon: "alpine",
-    albon: "williams", sargeant: "williams",
-    hulkenberg: "haas", kevin_magnussen: "haas",
-    bottas: "alfa", zhou: "alfa",
-    tsunoda: "alphatauri", ricciardo: "alphatauri",
-    lawson: "alphatauri",
-  };
+const constructorMap = {
+  max_verstappen:"red_bull", perez:"red_bull",
+  leclerc:"ferrari", sainz:"ferrari",
+  hamilton:"mercedes", russell:"mercedes",
+  norris:"mclaren", piastri:"mclaren",
+  alonso:"aston_martin", stroll:"aston_martin",
+  gasly:"alpine", ocon:"alpine",
+  albon:"williams", sargeant:"williams",
+  hulkenberg:"haas", kevin_magnussen:"haas",
+  bottas:"alfa", zhou:"alfa",
+  tsunoda:"alphatauri", ricciardo:"alphatauri", lawson:"alphatauri"
+};
 
-  const driverNums = {
-    max_verstappen: "1", leclerc: "16", hamilton: "44", norris: "4",
-    sainz: "55", russell: "63", alonso: "14", piastri: "81",
-    perez: "11", stroll: "18", gasly: "10", ocon: "31",
-    albon: "23", hulkenberg: "27", bottas: "77", tsunoda: "22",
-    zhou: "24", ricciardo: "3", lawson: "40", kevin_magnussen: "20",
-  };
+const driverNums = {
+  max_verstappen:"1", leclerc:"16", hamilton:"44", norris:"4",
+  sainz:"55", russell:"63", alonso:"14", piastri:"81",
+  perez:"11", stroll:"18", gasly:"10", ocon:"31",
+  albon:"23", hulkenberg:"27", bottas:"77", tsunoda:"22",
+  zhou:"24", ricciardo:"3", lawson:"40", kevin_magnussen:"20"
+};
 
-  async function loadCircuits() {
-    const res = await fetch(`${API}/circuits`);
-    const data = await res.json();
-    const container = document.getElementById("circuits");
-    container.innerHTML = "";
+// Wikipedia free images - stable URLs
+const driverImages = {
+  max_verstappen: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Max_Verstappen_2023_%28cropped%29.jpg/220px-Max_Verstappen_2023_%28cropped%29.jpg",
+  leclerc: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Charles_Leclerc_2024.jpg/220px-Charles_Leclerc_2024.jpg",
+  hamilton: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg/220px-Lewis_Hamilton_2016_Malaysia_2.jpg",
+  norris: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Lando_Norris_2024.jpg/220px-Lando_Norris_2024.jpg",
+  sainz: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Carlos_Sainz_Jr._2022.jpg/220px-Carlos_Sainz_Jr._2022.jpg",
+  russell: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/George_Russell_2022_%28cropped%29.jpg/220px-George_Russell_2022_%28cropped%29.jpg",
+  alonso: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Fernando_Alonso_2023.jpg/220px-Fernando_Alonso_2023.jpg",
+  piastri: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Oscar_Piastri_2023_%28cropped%29.jpg/220px-Oscar_Piastri_2023_%28cropped%29.jpg",
+  perez: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Sergio_P%C3%A9rez_2023.jpg/220px-Sergio_P%C3%A9rez_2023.jpg",
+  stroll: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Lance_Stroll_2023.jpg/220px-Lance_Stroll_2023.jpg",
+  gasly: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Pierre_Gasly_2023.jpg/220px-Pierre_Gasly_2023.jpg",
+  albon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Alex_Albon_2023_%28cropped%29.jpg/220px-Alex_Albon_2023_%28cropped%29.jpg",
+  hulkenberg: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Nico_H%C3%BClkenberg_2023_%28cropped%29.jpg/220px-Nico_H%C3%BClkenberg_2023_%28cropped%29.jpg",
+  tsunoda: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Yuki_Tsunoda_2023_%28cropped%29.jpg/220px-Yuki_Tsunoda_2023_%28cropped%29.jpg",
+  bottas: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Valtteri_Bottas_2022_%28cropped%29.jpg/220px-Valtteri_Bottas_2022_%28cropped%29.jpg",
+};
 
-    const popular = ["monaco","monza","silverstone","spa","suzuka","bahrain",
-      "albert_park","americas","interlagos","zandvoort","hungaroring",
-      "barcelona","marina_bay","yas_marina","baku"];
-    const filtered = data.circuits.filter(c => popular.includes(c));
+// Team logo colors as CSS (using colored dots since logos are copyrighted)
+const teamColors = {
+  red_bull:"#3671C6", ferrari:"#E8002D", mercedes:"#27F4D2",
+  mclaren:"#FF8000", aston_martin:"#358C75", alpine:"#0093CC",
+  williams:"#64C4FF", haas:"#B6BABD", alfa:"#C92D4B", alphatauri:"#5E8FAA"
+};
 
-    filtered.forEach(c => {
-      const btn = document.createElement("button");
-      btn.className = "circuit-btn";
-      btn.innerHTML = `${c.replace(/_/g," ")}<div class="circuit-country">${circuitMeta[c] || ""}</div>`;
-      btn.onclick = () => selectCircuit(c, btn);
-      container.appendChild(btn);
-    });
-  }
+function getTeamDot(constructor) {
+  const color = teamColors[constructor] || "#666";
+  return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:4px"></span>`;
+}
 
-  async function loadDrivers() {
-    const res = await fetch(`${API}/drivers`);
-    const data = await res.json();
-    const drivers = data.drivers.filter(d => constructorMap[d]);
-    const container = document.getElementById("drivers");
-    container.innerHTML = "";
+async function loadCircuits() {
+  const res = await fetch(`${API}/circuits`);
+  const data = await res.json();
+  const container = document.getElementById("circuits");
+  container.innerHTML = "";
+  const popular = ["monaco","monza","silverstone","spa","suzuka","bahrain","albert_park","americas","interlagos","zandvoort","hungaroring","barcelona","marina_bay","yas_marina","baku"];
+  data.circuits.filter(c => popular.includes(c)).forEach(c => {
+    const btn = document.createElement("button");
+    btn.className = "circuit-btn";
+    btn.innerHTML = `${c.replace(/_/g," ")}<div class="circuit-country">${circuitMeta[c]||""}</div>`;
+    btn.onclick = () => selectCircuit(c, btn);
+    container.appendChild(btn);
+  });
+}
 
-    drivers.forEach(d => {
-      const card = document.createElement("div");
-      card.className = "driver-card";
-      const num = driverNums[d] || "??";
-      const team = (constructorMap[d] || "").replace(/_/g," ");
-      card.innerHTML = `
-        <div class="driver-check">✓</div>
-        <div class="driver-num">${num}</div>
+async function loadDrivers() {
+  const res = await fetch(`${API}/drivers`);
+  const data = await res.json();
+  const container = document.getElementById("drivers");
+  container.innerHTML = "";
+  data.drivers.filter(d => constructorMap[d]).forEach(d => {
+    const card = document.createElement("div");
+    card.className = "driver-card";
+    const img = driverImages[d];
+    const num = driverNums[d] || "?";
+    const team = constructorMap[d] || "";
+    const teamColor = teamColors[team] || "#666";
+    card.innerHTML = `
+      <div class="driver-img-wrap">
+        ${img
+          ? `<img class="driver-img" src="${img}" alt="${d}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+          : ""}
+        <div class="driver-img-placeholder" style="display:${img?'none':'flex'}">${num}</div>
+      </div>
+      <div class="driver-num-badge" style="border-left-color:${teamColor}">${num}</div>
+      <div class="driver-info">
         <div class="driver-name">${d.replace(/_/g," ")}</div>
-        <div class="driver-team">${team}</div>
-      `;
-      card.onclick = () => toggleDriver(d, card);
-      container.appendChild(card);
+        <div class="driver-team-name" style="color:${teamColor}">${team.replace(/_/g," ")}</div>
+      </div>
+      <div class="driver-selected-badge">✓</div>
+    `;
+    card.onclick = () => toggleDriver(d, card);
+    container.appendChild(card);
+  });
+}
+
+function selectCircuit(circuit, btn) {
+  selectedCircuit = circuit;
+  document.querySelectorAll(".circuit-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  updateBtn();
+}
+
+function toggleDriver(driver, card) {
+  if (selectedDrivers.includes(driver)) {
+    selectedDrivers = selectedDrivers.filter(d => d !== driver);
+    card.classList.remove("selected");
+  } else {
+    if (selectedDrivers.length >= 6) return;
+    selectedDrivers.push(driver);
+    card.classList.add("selected");
+  }
+  const count = selectedDrivers.length;
+  document.getElementById("selectStatus").innerHTML = count === 0
+    ? `SELECT <span>2–6</span> DRIVERS TO COMPARE`
+    : `<span>${count}</span> / 6 DRIVERS SELECTED`;
+  updateBtn();
+}
+
+function updateBtn() {
+  document.getElementById("predictBtn").disabled = !(selectedCircuit && selectedDrivers.length >= 2);
+}
+
+async function predict() {
+  const sec = document.getElementById("resultsSection");
+  const el = document.getElementById("results");
+  sec.style.display = "block";
+  el.innerHTML = '<div class="loading-state">Computing prediction</div>';
+  sec.scrollIntoView({ behavior:"smooth", block:"start" });
+
+  document.getElementById("resultsTitle").textContent =
+    `${selectedCircuit.replace(/_/g," ").toUpperCase()} — PREDICTION`;
+
+  const drivers = selectedDrivers.map((d, i) => ({
+    driver: d, constructor: constructorMap[d],
+    quali_position: i+1, grid: i+1,
+    avg_finish_last3: 8, avg_points_last3: 8,
+    championship_points: 50, championship_position: i+1
+  }));
+
+  try {
+    const res = await fetch(`${API}/predict`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ circuit: selectedCircuit, drivers })
     });
-  }
+    const data = await res.json();
+    el.innerHTML = "";
 
-  function selectCircuit(circuit, btn) {
-    selectedCircuit = circuit;
-    document.querySelectorAll(".circuit-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    updateBtn();
-  }
-
-  function toggleDriver(driver, card) {
-    if (selectedDrivers.includes(driver)) {
-      selectedDrivers = selectedDrivers.filter(d => d !== driver);
-      card.classList.remove("selected");
-    } else {
-      if (selectedDrivers.length >= 6) return;
-      selectedDrivers.push(driver);
-      card.classList.add("selected");
-    }
-    const count = selectedDrivers.length;
-    const status = document.getElementById("selectStatus");
-    status.innerHTML = count === 0
-      ? `SELECT <span>2–6</span> DRIVERS TO COMPARE`
-      : `<span>${count}</span> / 6 DRIVERS SELECTED`;
-    updateBtn();
-  }
-
-  function updateBtn() {
-    document.getElementById("predictBtn").disabled =
-      !(selectedCircuit && selectedDrivers.length >= 2);
-  }
-
-  async function predict() {
-    const resultsSection = document.getElementById("resultsSection");
-    const resultsEl = document.getElementById("results");
-    resultsSection.style.display = "block";
-    resultsEl.innerHTML = '<div class="loading-state">Computing prediction</div>';
-    resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    document.getElementById("resultsTitle").textContent =
-      `${selectedCircuit.replace(/_/g," ").toUpperCase()} — ${new Date().getFullYear()} PREDICTION`;
-
-    const drivers = selectedDrivers.map((d, i) => ({
-      driver: d,
-      constructor: constructorMap[d],
-      quali_position: i + 1,
-      grid: i + 1,
-      avg_finish_last3: 8,
-      avg_points_last3: 8,
-      championship_points: 50,
-      championship_position: i + 1,
-    }));
-
-    try {
-      const res = await fetch(`${API}/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ circuit: selectedCircuit, drivers }),
-      });
-
-      const data = await res.json();
-      const preds = data.predictions;
-      resultsEl.innerHTML = "";
-
-      preds.forEach((p, i) => {
-        const row = document.createElement("div");
-        row.className = "result-row";
-        row.innerHTML = `
-          <div class="result-pos">${i + 1}</div>
+    data.predictions.forEach((p, i) => {
+      const row = document.createElement("div");
+      row.className = "result-row";
+      const img = driverImages[p.driver];
+      const teamColor = teamColors[p.constructor] || "#666";
+      row.innerHTML = `
+        <div class="result-pos">${i+1}</div>
+        <div class="result-driver-wrap">
+          ${img
+            ? `<img class="result-driver-img" src="${img}" alt="${p.driver}" onerror="this.style.display='none'">`
+            : `<div class="result-driver-img-placeholder">${driverNums[p.driver]||"?"}</div>`}
           <div>
             <div class="result-driver">${p.driver.replace(/_/g," ")}</div>
-            <div class="result-constructor">${p.constructor.replace(/_/g," ")}</div>
+            <div class="result-constructor">
+              <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${teamColor}"></span>
+              ${p.constructor.replace(/_/g," ")}
+            </div>
           </div>
-          <div class="result-stat">
-            <div class="stat-val">${p.win_probability}%</div>
-            <div class="stat-bar-wrap"><div class="stat-bar" id="wb${i}"></div></div>
-            <div class="stat-label">Win chance</div>
-          </div>
-          <div class="result-stat">
-            <div class="stat-val" style="color:var(--muted);font-size:1.3rem">${p.podium_probability}%</div>
-            <div class="stat-bar-wrap"><div class="stat-bar" id="pb${i}" style="background:#444"></div></div>
-            <div class="stat-label">Podium chance</div>
-          </div>
-          <div class="result-pts">
-            <span class="result-pts-val">${p.predicted_championship_points}</span>
-            pts
-          </div>
-        `;
-        resultsEl.appendChild(row);
-
-        setTimeout(() => {
-          document.getElementById(`wb${i}`).style.width = `${p.win_probability}%`;
-          document.getElementById(`pb${i}`).style.width = `${p.podium_probability}%`;
-        }, 100 + i * 80);
-      });
-
-    } catch (e) {
-      resultsEl.innerHTML = '<div class="error-state">CONNECTION ERROR — IS THE API RUNNING?</div>';
-    }
+        </div>
+        <div class="result-stat">
+          <div class="stat-val">${p.win_probability}%</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" id="wb${i}"></div></div>
+          <div class="stat-label">Win chance</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-val" style="color:var(--muted);font-size:1.2rem">${p.podium_probability}%</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" id="pb${i}" style="background:#444"></div></div>
+          <div class="stat-label">Podium chance</div>
+        </div>
+        <div class="result-pts">
+          <span class="result-pts-val">${p.predicted_championship_points}</span>pts
+        </div>
+      `;
+      el.appendChild(row);
+      setTimeout(() => {
+        document.getElementById(`wb${i}`).style.width = `${p.win_probability}%`;
+        document.getElementById(`pb${i}`).style.width = `${p.podium_probability}%`;
+      }, 100 + i * 80);
+    });
+  } catch(e) {
+    el.innerHTML = '<div class="error-state">CONNECTION ERROR — IS THE API RUNNING?</div>';
   }
+}
 
-  loadCircuits();
-  loadDrivers();
+loadCircuits();
+loadDrivers();
 </script>
 </body>
 </html>
